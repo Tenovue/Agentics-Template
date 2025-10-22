@@ -340,6 +340,10 @@ def prompt_claude_code(request: AgentPromptRequest) -> AgentPromptResponse:
 
     # Set up environment with only required variables
     env = get_claude_env()
+    
+    # DEBUG: Print to stderr what we're passing to Claude Code
+    print(f"DEBUG: ANTHROPIC_API_KEY in env: {env.get('ANTHROPIC_API_KEY', 'NOT SET')[:30]}...", file=sys.stderr)
+    print(f"DEBUG: CLAUDE_CODE_OAUTH_TOKEN in env: {env.get('CLAUDE_CODE_OAUTH_TOKEN', 'NOT SET')[:30]}...", file=sys.stderr)
 
     try:
         # Open output file for streaming

@@ -168,23 +168,20 @@ def check_env_vars(logger: Optional[logging.Logger] = None) -> None:
         SystemExit: If required environment variables are missing
     """
     required_vars = [
-        "ANTHROPIC_API_KEY",
+        "CLAUDE_CODE_OAUTH_TOKEN",  # Changed from ANTHROPIC_API_KEY
         "CLAUDE_CODE_PATH",
     ]
     missing_vars = [var for var in required_vars if not os.getenv(var)]
 
     if missing_vars:
         error_msg = "Error: Missing required environment variables:"
+        for var in missing_vars:
+            error_msg += f"\n  - {var}"
         if logger:
             logger.error(error_msg)
-            for var in missing_vars:
-                logger.error(f"  - {var}")
         else:
-            print(error_msg, file=sys.stderr)
-            for var in missing_vars:
-                print(f"  - {var}", file=sys.stderr)
+            print(error_msg)
         sys.exit(1)
-
 
 def get_safe_subprocess_env() -> Dict[str, str]:
     """Get filtered environment variables safe for subprocess execution.
@@ -198,7 +195,9 @@ def get_safe_subprocess_env() -> Dict[str, str]:
     """
     safe_env_vars = {
         # Anthropic Configuration (required)
-        "ANTHROPIC_API_KEY": os.getenv("ANTHROPIC_API_KEY"),
+        # Note: Claude Code prefers CLAUDE_CODE_OAUTH_TOKEN over ANTHROPIC_API_KEY
+        # If both are set, only include CLAUDE_CODE_OAUTH_TOKEN
+        "CLAUDE_CODE_OAUTH_TOKEN": os.getenv("CLAUDE_CODE_OAUTH_TOKEN"),
         
         # GitHub Configuration (optional)
         # GITHUB_PAT is optional - if not set, will use default gh auth

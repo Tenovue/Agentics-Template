@@ -34,7 +34,8 @@ from adw_modules.workflow_ops import extract_adw_info, AVAILABLE_ADW_WORKFLOWS
 from adw_modules.state import ADWState
 
 # Load environment variables
-load_dotenv()
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+load_dotenv(os.path.join(project_root, '.env'))
 
 # Configuration
 PORT = int(os.getenv("PORT", "8001"))
